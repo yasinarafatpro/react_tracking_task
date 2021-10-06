@@ -1,9 +1,11 @@
 import Header from './component/Header'
+import Button from './component/Button';
 function App() {
   return (
     <div className='container'>
-      <h1>Hello From app work currectly</h1>
       <Header/>
+      <Button/>
+      <Button/>
     </div>
   );
 }
