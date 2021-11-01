@@ -13,7 +13,6 @@ const Header = ({ title1 }) => {
             text='click!'
             onClick={onClick}
             />
-            
         </header>
     )
 }
