@@ -1,28 +1,26 @@
 /* eslint-disable no-unused-vars */
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import Header from './component/Header'
 import Tasks from './component/Tasks';
 import AddTask from './component/AddTask';
+import { FaSketch } from 'react-icons/fa';
 function App() {
-  const [tasks, setTasks] = useState([
-    {
-        id: 1,
-        text: 'Dr.Appoinment',
-        day: '5 feb 2021 3.45pm',
-        reminder: true,
-    },
-    {
-        id: 2,
-        text: 'Metting at office',
-        day: '7 feb 2021 7.45pm',
-        reminder: true,
-    }, {
-        id: 3,
-        text: 'Shopping ',
-        day: '8 feb 2021 8.45pm',
-        reminder: false,
-    },
-])
+  const[showAddTask,setShowAddTask]=useState(false)
+  const [tasks, setTasks] = useState([])
+
+  useEffect(()=>{
+    const getTasks=async()=>{
+      const taskFromServer=await fatchTasks()
+      setTasks(taskFromServer)
+    }
+    getTasks()
+  },[])
+  //fetch data from json server
+  const fatchTasks=async()=>{
+    const res=await fetch('http://localhost:5000/tasks')
+    const data=await res.json()
+    return data
+  }
 const toggleReminder=(id)=>{
   console.log('Toggole Reminder',id)
   setTasks(tasks.map((task)=>
@@ -43,8 +41,11 @@ const deleteTask =(id)=>{
 }
   return (
     <div className='container'>
-      <Header/>
-      <AddTask onAdd={addTask}/>
+      <Header 
+      onAdd={()=>setShowAddTask(!showAddTask)}
+      showAdd={showAddTask}
+      />
+      {showAddTask && <AddTask onAdd={addTask}/>}
       {tasks.length>0 ?(<Tasks 
       tasks={tasks} 
       onDelete={deleteTask} 
