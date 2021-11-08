@@ -3,7 +3,6 @@ import { useState,useEffect } from 'react'
 import Header from './component/Header'
 import Tasks from './component/Tasks';
 import AddTask from './component/AddTask';
-import { FaSketch } from 'react-icons/fa';
 function App() {
   const[showAddTask,setShowAddTask]=useState(false)
   const [tasks, setTasks] = useState([])
@@ -28,15 +27,22 @@ const toggleReminder=(id)=>{
   ))
 }
 //addTask
-const addTask=(task)=>{
-  const id=Math.floor(Math.random()*99999) + 9
-  const newTask={ id,...task}
-  console.log(task,id)
-  setTasks([...tasks,newTask])
+const addTask=async(task)=>{
+  const res=await fetch('http://localhost:5000/tasks',{
+    method:'POST',
+    headers:{
+      'Content-type':'application/json'
+    },
+    body:JSON.stringify(task),
+  })
+  const data=await res.json()
+  setTasks([...tasks,data])
 }
+
 //delete task
-const deleteTask =(id)=>{
-  console.log('delete task',id)
+const deleteTask =async(id)=>{
+  const deletedTask= await fetch(`http://localhost:5000/tasks/${id}`,{method:'DELETE'})
+  console.log(deletedTask)
   setTasks(tasks.filter((task)=>task.id!==id))
 }
   return (
